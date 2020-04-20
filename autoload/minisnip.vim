@@ -34,9 +34,7 @@ endfunction
 function! minisnip#Minisnip() abort
     if exists('s:snippetfile')
         " reset placeholder text history (for backrefs) if it grows too much
-        if len(keys(s:placeholder_texts)) > 25
-            let s:placeholder_texts = {}
-        endif
+        let s:placeholder_texts = {}
         let s:placeholder_content = ''
         let s:placeholder_text_previous = ''
         " adjust the indentation, use the current line as reference
@@ -139,12 +137,6 @@ function! s:SelectPlaceholder() abort
         let &wrapscan = l:ws
     endtry
 
-    " save the contents of the previous placeholder (for backrefs)
-    if s:placeholder_text_previous !=# ''
-        let s:placeholder_texts[s:placeholder_text_previous] = s:placeholder_content
-    endif
-    let s:placeholder_text_previous = @s
-
     if @s =~ '\V\^' . g:minisnip_donotskipmarker
         let @s=substitute(@s, '\V\^' . g:minisnip_donotskipmarker , '', '')
         let l:skip = 0
@@ -156,13 +148,25 @@ function! s:SelectPlaceholder() abort
         let l:skip = 0
     endif
 
+    if s:placeholder_text_previous !=# ''
+        let s:placeholder_texts[s:placeholder_text_previous] = s:placeholder_content
+    endif
+    let s:placeholder_text_previous = @s
+
     if @s =~ '\V\^' . g:minisnip_backrefmarker
         let @s=substitute(@s, '\V\^' . g:minisnip_backrefmarker, '', '')
+
         " We have seen this placeholder before.
         if has_key(s:placeholder_texts, @s)
             let @s=get(s:placeholder_texts, @s)
         else
-            " if somehow not seen. Ask again.
+            " Add it in if we havent seen it
+            if s:placeholder_text_previous !=# ''
+                let s:placeholder_texts[s:placeholder_text_previous] = s:placeholder_content
+            endif
+            let s:placeholder_text_previous = @s
+
+            " if not seen. Ask again. (happend when using snippets in snippets)
             let l:skip = 0
         endif
     endif

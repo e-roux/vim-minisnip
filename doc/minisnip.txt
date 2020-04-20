@@ -13,7 +13,6 @@ License: MIT
 1. Overview                    |minisnip-overview|
 2. Mappings                    |minisnip-mappings|
 3. Configuration               |minisnip-configuration|
-4. Miscellaneous               |minisnip-miscellaneous|
 
 ===============================================================================
 OVERVIEW                                                    *minisnip-overview*
@@ -168,30 +167,5 @@ these placeholders will be targeted last. >
     {{--}}
     # END FUNCTION {{++}}
 <
-
-===============================================================================
-MISCELLANIOUS                                          *minisnip-miscellaneous*
-
-Backreferences may override other snippets backreferences. For example lets
-call this snippet `name`: >
-
-    {{+name+}}
-    {{++}}
-    {{+<name+}}
-
-If you were to insert this snippet. The first expansion would trigger name to
-become available in backreferences, however if you expand this snippet again:
->
-    insert1
-    name|
-    {{+<name+}}
-
-It would endup like this: >
-
-    insert1
-    insert2
-    insert3
-    insert2
-    insert2
 
  vim:tw=78:fo=tcq2:isk=!-~,^*,^\|,^\":ts=8:ft=help:norl:
