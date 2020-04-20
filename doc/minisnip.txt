@@ -13,6 +13,7 @@ License: MIT
 1. Overview                    |minisnip-overview|
 2. Mappings                    |minisnip-mappings|
 3. Configuration               |minisnip-configuration|
+4. Miscellaneous               |minisnip-miscellaneous|
 
 ===============================================================================
 OVERVIEW                                                    *minisnip-overview*
@@ -131,20 +132,6 @@ This will be expanded to the current date and select the timestamp.
                                                    *'g:minisnip_backrefmarker'*
 Default: '<'
 
-When this is present, followed by a name, in a placeholder that
-also starts with |'g:minisnip_evalmarker'|, it will be replaced with the `n`th
-to last previous placeholder value, surrounded by quotes. Here is an example
-of how it can be used: >
-    #ifndef {{+INCLUDE_GUARD+}}
-    #define {{+~\~1+}}
-
-    {{++}}
-
-    #endif
-<
-This will automatically fill the `#define` line with the value entered on the
-`#ifndef` line upon jumping to it.
-
 When this is present, followed by an identifier that has been filled
 previously in the snippet, it will be replaced with the corresponding
 placeholders value. Here is an example: >
@@ -179,8 +166,32 @@ normal placeholders will be dealt with in the order they appear in the snippet,
 these placeholders will be targeted last. >
     # BEGIN FUNCTION {{++}}
     {{--}}
-    # END FUNCTION {{+~\~1+}}
+    # END FUNCTION {{++}}
 <
 
+===============================================================================
+MISCELLANIOUS                                          *minisnip-miscellaneous*
+
+Backreferences may override other snippets backreferences. For example lets
+call this snippet `name`: >
+
+    {{+name+}}
+    {{++}}
+    {{+<name+}}
+
+If you were to insert this snippet. The first expansion would trigger name to
+become available in backreferences, however if you expand this snippet again:
+>
+    insert1
+    name|
+    {{+<name+}}
+
+It would endup like this: >
+
+    insert1
+    insert2
+    insert3
+    insert2
+    insert2
 
  vim:tw=78:fo=tcq2:isk=!-~,^*,^\|,^\":ts=8:ft=help:norl:

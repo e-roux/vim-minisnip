@@ -34,7 +34,7 @@ endfunction
 function! minisnip#Minisnip() abort
     if exists('s:snippetfile')
         " reset placeholder text history (for backrefs) if it grows too much
-        if len(keys(s:placeholder_texts)) > 50
+        if len(keys(s:placeholder_texts)) > 25
             let s:placeholder_texts = {}
         endif
         let s:placeholder_content = ''
@@ -161,6 +161,9 @@ function! s:SelectPlaceholder() abort
         " We have seen this placeholder before.
         if has_key(s:placeholder_texts, @s)
             let @s=get(s:placeholder_texts, @s)
+        else
+            " if somehow not seen. Ask again.
+            let l:skip = 0
         endif
     endif
 
