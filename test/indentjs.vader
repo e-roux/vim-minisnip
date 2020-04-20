@@ -1,0 +1,20 @@
+Before (set the minisnip dir to a local one for testing):
+  let g:minisnip_dir = './snippets'
+  set shiftwidth=2
+  set tabstop=2
+  set expandtab
+
+Given (buffer with indented placeholder):
+  function name() {
+    indentedjs
+  }
+
+Do (expand snippet):
+  jA\<tab>
+
+Expect (replacement to be indented):
+  function name() {
+    function name() {
+      content
+    }
+  }
