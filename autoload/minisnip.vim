@@ -1,4 +1,5 @@
-let s:placeholder_texts = []
+let s:placeholder_texts = {}
+let s:placeholder_text_previous = ''
 
 function! minisnip#ShouldTrigger() abort
     silent! unlet! s:snippetfile
@@ -32,9 +33,12 @@ endfunction
 " main function, called on press of Tab (or whatever key Minisnip is bound to)
 function! minisnip#Minisnip() abort
     if exists('s:snippetfile')
-        " reset placeholder text history (for backrefs)
-        let s:placeholder_texts = []
-        let s:placeholder_text = ''
+        " reset placeholder text history (for backrefs) if it grows too much
+        if len(keys(s:placeholder_texts)) > 50
+            let s:placeholder_texts = {}
+        endif
+        let s:placeholder_content = ''
+        let s:placeholder_text_previous = ''
         " adjust the indentation, use the current line as reference
         let l:ws = matchstr(getline(line('.')), '^\s\+')
         let l:lns = map(readfile(s:snippetfile), 'empty(v:val)? v:val : l:ws.v:val')
@@ -89,7 +93,7 @@ function! minisnip#Minisnip() abort
         " save the current placeholder's text so we can backref it
         let l:old_s = @s
         normal! ms"syv`<`s
-        let s:placeholder_text = @s
+        let s:placeholder_content = @s
         let @s = l:old_s
         " jump to the next placeholder
         call s:SelectPlaceholder()
@@ -136,27 +140,34 @@ function! s:SelectPlaceholder() abort
     endtry
 
     " save the contents of the previous placeholder (for backrefs)
-    call add(s:placeholder_texts, s:placeholder_text)
+    if s:placeholder_text_previous !=# ''
+        let s:placeholder_texts[s:placeholder_text_previous] = s:placeholder_content
+    endif
+    let s:placeholder_text_previous = @s
 
-    if @s =~ '\V\^' . g:minisnip_evalmarker
-       let l:skip = 1
-    elseif @s =~ '\V\^' . g:minisnip_donotskipmarker . g:minisnip_evalmarker
-       let @s=substitute(@s, '\V\^' . g:minisnip_donotskipmarker , '', '')
-       let l:skip = 0
+    if @s =~ '\V\^' . g:minisnip_donotskipmarker
+        let @s=substitute(@s, '\V\^' . g:minisnip_donotskipmarker , '', '')
+        let l:skip = 0
+    elseif @s =~ '\V\^' . g:minisnip_evalmarker
+        let l:skip = 1
+    elseif @s =~ '\V\^' . g:minisnip_backrefmarker
+        let l:skip = 1
     else
-       let l:skip = 0
+        let l:skip = 0
+    endif
+
+    if @s =~ '\V\^' . g:minisnip_backrefmarker
+        let @s=substitute(@s, '\V\^' . g:minisnip_backrefmarker, '', '')
+        " We have seen this placeholder before.
+        if has_key(s:placeholder_texts, @s)
+            let @s=get(s:placeholder_texts, @s)
+        endif
     endif
 
     " is this placeholder marked as 'evaluate'?
     if @s =~ '\V\^' . g:minisnip_evalmarker
         " remove the marker
         let @s=substitute(@s, '\V\^' . g:minisnip_evalmarker, '', '')
-        " substitute in any backrefs
-        let @s=substitute(@s, '\V' . g:minisnip_backrefmarker . '\(\d\)',
-            \"\\=\"'\" . substitute(get(
-            \    s:placeholder_texts,
-            \    len(s:placeholder_texts) - str2nr(submatch(1)), ''
-            \), \"'\", \"''\", 'g') . \"'\"", 'g')
         " evaluate what's left
         let @s=eval(@s)
     endif

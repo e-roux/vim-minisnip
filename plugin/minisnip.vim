@@ -12,8 +12,8 @@ let g:minisnip_enddelim = get(g:, 'minisnip_enddelim', '+}}')
 let g:minisnip_finalstartdelim = get(g:, 'minisnip_finalstartdelim', '{{-')
 let g:minisnip_finalenddelim = get(g:, 'minisnip_finalenddelim', '-}}')
 let g:minisnip_evalmarker = get(g:, 'minisnip_evalmarker', '~')
-let g:minisnip_donotskipmarker = get(g:, 'minisnip_donotskipmarker', '`')
-let g:minisnip_backrefmarker = get(g:, 'minisnip_backrefmarker', '\\~')
+let g:minisnip_donotskipmarker = get(g:, 'minisnip_donotskipmarker', '''')
+let g:minisnip_backrefmarker = get(g:, 'minisnip_backrefmarker', '<')
 
 " this is the pattern used to find placeholders
 let g:minisnip_delimpat = '\V' . g:minisnip_startdelim . '\.\{-}' . g:minisnip_enddelim

@@ -13,7 +13,6 @@ License: MIT
 1. Overview                    |minisnip-overview|
 2. Mappings                    |minisnip-mappings|
 3. Configuration               |minisnip-configuration|
-4. Miscellaneous               |minisnip-miscellaneous|
 
 ===============================================================================
 OVERVIEW                                                    *minisnip-overview*
@@ -33,6 +32,8 @@ you to add ex. a `_c_main` snippet and so on.
 ===============================================================================
 MAPPINGS                                                    *minisnip-mappings*
 
+Mappings are defined if the user has not defined any.
+
 -------------------------------------------------------------------------------
                     *minisnip_<Tab>*
 <Tab>               In insert mode, expand a mapping or jump to the next
@@ -44,6 +45,15 @@ MAPPINGS                                                    *minisnip-mappings*
 <C-x><C-t>          Start |ins-completion| for the snippet. Press <C-t> again
                     to go to the next snippet; press <C-y> or <Tab> to
                     complete it.
+
+===============================================================================
+PLUG-MAPPINGS                                          *minisnip-plug-mappings*
+
+<Plug>(minisnip-complete)
+
+Override the default <C-x><C-t> completion. For example: >
+    imap <c-n> <plug>(minisnip-complete)
+
 
 ===============================================================================
 CONFIGURATION                                          *minisnip-configuration*
@@ -104,7 +114,7 @@ placeholder is selected. This behaviour can be altered with the
 
 -------------------------------------------------------------------------------
                                                  *'g:minisnip_donotskipmarker'*
-Default: '`'
+Default: '''
 
 By default when selecting a placeholder with the |'g:minisnip_evalmarker'| the
 next placeholder is selected after evaluation. To mark a placeholder which is
@@ -113,15 +123,15 @@ to be evaluated so that it is selected after evaluation use the
 the snippet.
 
 An example: >
-    {{+`~strftime("%Y-%m-%d")+}}
+    {{+'~strftime("%Y-%m-%d")+}}
 <
 This will be expanded to the current date and select the timestamp.
 
 -------------------------------------------------------------------------------
                                                    *'g:minisnip_backrefmarker'*
-Default: '\\~'
+Default: '<'
 
-When this is present, followed by a single digit `n`, in a placeholder that
+When this is present, followed by a name, in a placeholder that
 also starts with |'g:minisnip_evalmarker'|, it will be replaced with the `n`th
 to last previous placeholder value, surrounded by quotes. Here is an example
 of how it can be used: >
@@ -134,6 +144,30 @@ of how it can be used: >
 <
 This will automatically fill the `#define` line with the value entered on the
 `#ifndef` line upon jumping to it.
+
+When this is present, followed by an identifier that has been filled
+previously in the snippet, it will be replaced with the corresponding
+placeholders value. Here is an example: >
+
+    #ifndef {{+INCLUDE_GUARD+}}
+    #define {{+<INCLUDE_GUARD+}}
+
+    {{++}}
+
+    #endif
+
+This will automatically fill the `#define` line with the value entered on the
+`#ifndef` line upon jumping to it.
+
+This can also be combined with |'g:minisnip_donotskipmarker'| like so: >
+    #ifndef {{+INCLUDE_GUARD+}}
+    #define {{+'<INCLUDE_GUARD+}}
+
+    {{++}}
+
+    #endif
+
+This will automatically fill the `#define` line with the value and select it.
 
 -------------------------------------------------------------------------------
                                                  *'g:minisnip_finalstartdelim'*
