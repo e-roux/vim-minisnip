@@ -3,8 +3,12 @@ let s:placeholder_text_previous = ''
 
 function! minisnip#ShouldTrigger() abort
     silent! unlet! s:snippetfile
-    let s:cword = matchstr(getline('.'), '\v\f+%' . col('.') . 'c')
-    let s:begcol = virtcol('.')
+
+    " include cursor character in select mode
+    let l:col = mode() == "s" ? col('.') + 1 : col('.')
+
+    let s:cword = matchstr(getline('.'), '\v\f+%' . l:col . 'c')
+    let s:begcol = mode() == "s" ? virtcol('.') + 1 : virtcol('.')
 
     " look for a snippet by that name
     for l:dir in split(g:minisnip_dir, s:pathsep())
@@ -78,7 +82,7 @@ function! minisnip#Minisnip() abort
         execute ':normal! '.(s:begcol - strchars(s:cword)).'|'
 
         " auto indent
-        execute ':normal! =' . l:nlines . 'j'
+        execute ':silent normal! =' . l:nlines . 'j'
 
         " select the first placeholder
         call s:SelectPlaceholder()
