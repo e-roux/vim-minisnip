@@ -156,6 +156,24 @@ Do (Perform the replacement):
 Expect (The buffer to have the replacement text in correct position):
   	This is a test snippet and other text
 
+Given (backref function):
+  backreffun
+
+Do (Perform expansion):
+  A\<tab>ok
+
+Expect (Backref replace and donot skip):
+  3 3 ok
+
+Given (backref override):
+  backrefoverride
+
+Do (Perform expansion):
+  A\<tab>name1\<tab>name2\<tab>
+
+Expect (Backref replace and donot skip):
+  name1 name1 name2 name2
+
 Given (buffer with indented placeholder):
   function name() {
   	indentedjs

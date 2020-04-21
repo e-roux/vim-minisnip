@@ -148,6 +148,7 @@ function! s:SelectPlaceholder() abort
         let l:skip = 0
     endif
 
+    " Add it to backrefs
     if s:placeholder_text_previous !=# ''
         let s:placeholder_texts[s:placeholder_text_previous] = s:placeholder_content
     endif
@@ -160,7 +161,7 @@ function! s:SelectPlaceholder() abort
         if has_key(s:placeholder_texts, @s)
             let @s=get(s:placeholder_texts, @s)
         else
-            " Add it in if we havent seen it
+            " Add it to backrefs
             if s:placeholder_text_previous !=# ''
                 let s:placeholder_texts[s:placeholder_text_previous] = s:placeholder_content
             endif
@@ -177,6 +178,10 @@ function! s:SelectPlaceholder() abort
         let @s=substitute(@s, '\V\^' . g:minisnip_evalmarker, '', '')
         " evaluate what's left
         let @s=eval(@s)
+
+        " Add it to backrefs
+        let s:placeholder_texts[s:placeholder_text_previous] = @s
+        let s:placeholder_text_previous = @s
     endif
 
     if empty(@s)

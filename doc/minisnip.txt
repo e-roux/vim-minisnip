@@ -13,6 +13,7 @@ License: MIT
 1. Overview                    |minisnip-overview|
 2. Mappings                    |minisnip-mappings|
 3. Configuration               |minisnip-configuration|
+4. Misc                        |minisnip-misc|
 
 ===============================================================================
 OVERVIEW                                                    *minisnip-overview*
@@ -155,6 +156,12 @@ This can also be combined with |'g:minisnip_donotskipmarker'| like so: >
 
 This will automatically fill the `#define` line with the value and select it.
 
+Combining with |'g:minisnip_evalmarker'| also yields expected results: >
+
+    {{+~localtime()+}} {{++}} {{+<~localtime()+}} {{--}}
+
+This will reference the time returned by the first call of `localtime()`.
+
 -------------------------------------------------------------------------------
                                                  *'g:minisnip_finalstartdelim'*
                                                    *'g:minisnip_finalenddelim'*
@@ -167,5 +174,13 @@ these placeholders will be targeted last. >
     {{--}}
     # END FUNCTION {{++}}
 <
+
+===============================================================================
+MISC                                                            *minisnip-misc*
+
+Expanding a snippet will always delete backreferences. This means that if
+using snippets in snippets the backrefeferences to the first snippet will be
+forgotten when expanding the second one. Current solution is to ask the
+placeholder value again.
 
  vim:tw=78:fo=tcq2:isk=!-~,^*,^\|,^\":ts=8:ft=help:norl:
