@@ -1,14 +1,16 @@
-**NOTE** This repository is archived and read-only. This fork of `vim-minisnip` was meant to be for simple bug fixes while retaining the simplicity of the original. I do not wish to add features to `vim-minisnip` (in fact, I want to remove some). 
+This fork of `vim-minisnip` was meant to be for simple bug fixes while retaining the simplicity of the original. I do not wish to add features to `vim-minisnip` (in fact, I want to remove some). 
 
-This fork has the following (backwards compatible) fixes/improvements:
+This fork has the following fixes/improvements:
 
 - Indent snippets when inserted
 - Allow special characters as snippet names
 - Autoload the plugin
 - Installation instructions in README
 - Avoid multiple loads of the plugin
+- Improved implementation of backreferancing
 
-It does not break compatibility with the [original vim-minisnip](https://github.com/KeyboardFire/vim-minisnip], only improves it.
+This breaks compatibility with the [original vim-minisnip](https://github.com/KeyboardFire/vim-minisnip)'s 
+backreferances, and, changes the default `g:minisnip_donotskipmarker`.
                
                _       _           _
      _ __ ___ (_)_ __ (_)___ _ __ (_)_ __
@@ -30,20 +32,20 @@ Use your favourite plugin manager to install minisnip:
 #### [vim-plug](https://github.com/junegunn/vim-plug):
 
 ```vim
-Plug 'joereynolds/vim-minisnip'
+Plug 'eemed/vim-minisnip'
 ```
 
 #### [Pathogen](https://github.com/tpope/vim-pathogen):
 
 ```bash
 cd ~/.vim/bundle
-git clone git://github.com/joereynolds/vim-minisnip.git
+git clone git://github.com/eemed/vim-minisnip
 ```
 
 #### [NeoBundle](https://github.com/Shougo/neobundle.vim)
 
 ```vim
-NeoBundle 'joereynolds/vim-minisnip'
+NeoBundle 'eemed/vim-minisnip'
 ```
 
 ## Usage
