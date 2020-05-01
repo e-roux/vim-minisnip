@@ -81,8 +81,11 @@ function! minisnip#Minisnip() abort
         " go to the beginning of the snippet
         execute ':normal! '.(s:begcol - strchars(s:cword)).'|'
 
+		" TODO: add to help file ../doc/minisnip.txt <30-04-20 Gavin Jaeger-Freeborn>
         " auto indent
-        execute ':silent normal! =' . l:nlines . 'j'
+		if exists('g:minisnip_autoindent') && g:minisnip_autoindent
+			execute ':silent normal! =' . l:nlines . 'j'
+		endif
 
         " select the first placeholder
         call s:SelectPlaceholder()
